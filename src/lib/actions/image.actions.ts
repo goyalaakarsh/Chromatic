@@ -8,15 +8,18 @@ import Image from "../database/models/image.model";
 import { redirect } from "next/navigation";
 
 import { v2 as cloudinary } from 'cloudinary'
+const populateUser = async (query: unknown) => {
+    if (query && typeof query === 'object' && 'populate' in query) {
+        return (query as { populate: Function }).populate({
+            path: 'author',
+            model: User,
+            select: '_id firstName lastName clerkId',
+        });
+    } else {
+        throw new Error('Query does not support populate');
+    }
+};
 
-const populateUser = (query: unknown) => {
-    (query as any).populate({
-      path: 'author',
-      model: User,
-      select: '_id firstName lastName clerkId',
-    });
-  };
-  
 
 // ADD IMAGE
 export async function addImage({ image, userId, path }: AddImageParams) {
@@ -87,9 +90,12 @@ export async function getImageById(imageId: string) {
 
         const image = await populateUser(Image.findById(imageId));
 
-        if (!image) throw new Error("Image not found");
-
+        if (!image) {
+          throw new Error("Image not found");
+        }
+        
         return JSON.parse(JSON.stringify(image));
+        
     } catch (error) {
         handleError(error)
     }
