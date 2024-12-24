@@ -126,8 +126,7 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
         const { resources } = await cloudinary.search
             .expression(expression)
             .execute();
-
-        const resourceIds = resources.map((resource: unknown) => resource.public_id);
+        const resourceIds = resources.map((resource: { public_id: string }) => resource.public_id);
 
         let query = {};
 
