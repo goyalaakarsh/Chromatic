@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import {
   ClerkProvider,
   SignInButton,
-  SignedIn,
   SignedOut,
-  UserButton
 } from '@clerk/nextjs'
 import "./globals.css";
 
@@ -20,15 +18,15 @@ const poppins = Poppins({
   variable: '--font-poppins',
 });
 
-const interSans = Inter({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// const interSans = Inter({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
 
-const interMono = Inter({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const interMono = Inter({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 export const metadata: Metadata = {
   title: "Chromatic",
@@ -45,12 +43,9 @@ export default function RootLayout({
       <html lang="en" className={`dark ${poppins.variable} font-sans`}>
         <body className={`dark ${poppins.variable} font-sans antialiased`}>
           <header>
-            {/* <SignedOut>
+            <SignedOut>
               <SignInButton />
-            </SignedOut> */}
-            {/* <SignedIn>
-              <UserButton />
-            </SignedIn> */}
+            </SignedOut>
           </header>
           <SidebarProvider>
             <AppSidebar />
