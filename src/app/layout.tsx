@@ -11,7 +11,7 @@ import {
 } from '@clerk/nextjs'
 import "./globals.css";
 
-import { Poppins } from '@next/font/google';
+import { Poppins } from 'next/font/google';
 
 // Load Poppins with specific weights and subsets
 const poppins = Poppins({
