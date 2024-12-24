@@ -102,7 +102,11 @@ export async function getImageById(imageId: string) {
 }
 
 // GET IMAGES
-export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
+export async function getAllImages({
+    limit = 9,
+    page = 1,
+    searchQuery = '',
+}: {
     limit?: number;
     page: number;
     searchQuery?: string;
@@ -115,36 +119,42 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
             api_key: process.env.CLOUDINARY_API_KEY,
             api_secret: process.env.CLOUDINARY_API_SECRET,
             secure: true,
-        })
+        });
 
+        // Build the expression for Cloudinary search
         let expression = 'folder=imaginify';
-
         if (searchQuery) {
-            expression += ` AND ${searchQuery}`
+            expression += ` AND ${searchQuery}`;
         }
 
-        const { resources } = await cloudinary.search
-            .expression(expression)
-            .execute();
+        // Execute Cloudinary search and get resources
+        const { resources } = await cloudinary.search.expression(expression).execute();
         const resourceIds = resources.map((resource: { public_id: string }) => resource.public_id);
 
-        let query = {};
+        // Build query for database search
+        let query: any = {}; // Declare query as any to be flexible
 
         if (searchQuery) {
             query = {
                 publicId: {
-                    $in: resourceIds
-                }
-            }
+                    $in: resourceIds,
+                },
+            };
         }
 
+        // Apply pagination (skip, limit)
         const skipAmount = (Number(page) - 1) * limit;
 
-        const images = await populateUser(Image.find(query))
+        // Construct the query and apply populate, sort, skip, limit
+        const queryWithPagination = Image.find(query)
             .sort({ updatedAt: -1 })
             .skip(skipAmount)
             .limit(limit);
 
+        // Apply populateUser on the query to handle population
+        const images = await populateUser(queryWithPagination);
+
+        // Calculate total images for pagination
         const totalImages = await Image.find(query).countDocuments();
         const savedImages = await Image.find().countDocuments();
 
@@ -152,11 +162,12 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
             data: JSON.parse(JSON.stringify(images)),
             totalPage: Math.ceil(totalImages / limit),
             savedImages,
-        }
+        };
     } catch (error) {
-        handleError(error)
+        handleError(error);
     }
 }
+
 
 // GET IMAGES BY USER
 export async function getUserImages({
