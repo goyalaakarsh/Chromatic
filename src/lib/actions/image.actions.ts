@@ -9,11 +9,14 @@ import { redirect } from "next/navigation";
 
 import { v2 as cloudinary } from 'cloudinary'
 
-const populateUser = (query: unknown) => query.populate({
-    path: 'author',
-    model: User,
-    select: '_id firstName lastName clerkId'
-})
+const populateUser = (query: unknown) => {
+    (query as any).populate({
+      path: 'author',
+      model: User,
+      select: '_id firstName lastName clerkId',
+    });
+  };
+  
 
 // ADD IMAGE
 export async function addImage({ image, userId, path }: AddImageParams) {
