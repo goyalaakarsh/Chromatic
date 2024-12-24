@@ -6,7 +6,6 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -61,7 +60,6 @@ export function AppSidebar() {
             <strong>Chromatic</strong>
         </SidebarHeader>
         <SidebarGroup>
-          {/* <SidebarGroupLabel>Menu</SidebarGroupLabel> */}
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

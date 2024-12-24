@@ -87,7 +87,7 @@ export const debounce = (func: (...args: unknown[]) => void, delay: number) => {
   let timeoutId: NodeJS.Timeout | null;
   return (...args: unknown[]) => {
     if (timeoutId) clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => func.apply(null, args), delay);
+    timeoutId = setTimeout(() => func(...args), delay);
   };
 };
 
@@ -134,9 +134,9 @@ export const deepMergeObjects = (obj1: unknown, obj2: unknown) => {
     return obj1;
   }
 
-  let output = { ...obj2 };
+  const output = { ...obj2 };
 
-  for (let key in obj1) {
+  for (const key in obj1) {
     if (obj1.hasOwnProperty(key)) {
       if (
         obj1[key] &&
