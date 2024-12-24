@@ -173,13 +173,19 @@ export async function getUserImages({
 
         const skipAmount = (Number(page) - 1) * limit;
 
-        const images = await populateUser(Image.find({ author: userId }))
+        // Apply the query methods (sort, skip, limit) on the query first
+        const query = Image.find({ author: userId })
             .sort({ updatedAt: -1 })
             .skip(skipAmount)
             .limit(limit);
 
+        // Pass the query to populateUser to apply the populate
+        const images = await populateUser(query);
+
+        // Get the total count of images
         const totalImages = await Image.find({ author: userId }).countDocuments();
 
+        // Return the response
         return {
             data: JSON.parse(JSON.stringify(images)),
             totalPages: Math.ceil(totalImages / limit),
